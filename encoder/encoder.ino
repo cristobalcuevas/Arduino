@@ -1,8 +1,10 @@
 /*
-  Cristobal Cuevas Lagos
-  Conversión de vueltas de encoder a desplazamiento
-  23-06-2022
-*/
+ * Archivo: Encoder.ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Read encoder of a motor
+ * Fecha: 23-06-2022
+ *
+ */
 // Pins de encoder
 const uint8_t pinA = 12;
 const uint8_t pinB = 13;

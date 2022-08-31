@@ -1,7 +1,10 @@
 /*
-  Cristóbal Cuevas Lagos ~ 30-06-2022
-  Lectura de fecha y hora de RTC
-*/
+ * Archivo: .ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Read RTC
+ * Fecha: 05-07-2022
+ *
+ */
 #include "RTClib.h"
 
 RTC_DS1307 rtc;

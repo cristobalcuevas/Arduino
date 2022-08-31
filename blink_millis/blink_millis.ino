@@ -1,3 +1,10 @@
+/*
+ * Archivo: Blink_millis.ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Blink led with millis function
+ * Fecha: 07-07-2022
+ *
+ */
 const byte pinLed = 13;
 boolean estadoLed = false;
 unsigned long tiempo = 0;

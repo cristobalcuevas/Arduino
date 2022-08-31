@@ -1,3 +1,10 @@
+/*
+ * Archivo: .ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Blink led with timer
+ * Fecha: 07-07-2022
+ *
+ */
 #define LED_PIN 13
 
 void setup() {

@@ -1,3 +1,10 @@
+/*
+ * Archivo: MicroSD.ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Function to work with Micro SD
+ * Fecha: 14-07-2022
+ *
+ */
 /******************************** LIBRERIAS *******************************/
 #include "FS.h"
 #include "SD.h"

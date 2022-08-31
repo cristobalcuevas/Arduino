@@ -9,10 +9,10 @@
 class Blink
 {
 public:
-  Blink(int pin);  //Constructor. attach pin to blink
-  void blink(bool value);  //enable blinking with 1s duration
-  void blink(bool value, int blinkLength);   //enable blinking with blink duration
-  void blink(bool value, int blinkLength, int blinkLoops);  //enable blinking with blink duration and number of loops
+  Blink(int pin);
+  void blink(bool value);
+  void blink(bool value, int blinkLength);
+  void blink(bool value, int blinkLength, int blinkLoops);
 private:
   uint8_t pinNumber;
 };

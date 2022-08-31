@@ -1,3 +1,10 @@
+/*
+ * Archivo: Matrix_led.ino
+ * Autor: Cristobal Cuevas
+ * Comentarios: Make a effect  with matrix led
+ * Fecha: 09-05-2019
+ *
+ */
 int R[] = {2,7,A5,5,13,A4,12,A2};
 int C[] = {6,11,10,3,A3,4,8,9};
 unsigned char biglove[8][8] =
