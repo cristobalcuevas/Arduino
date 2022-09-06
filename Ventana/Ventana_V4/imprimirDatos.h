@@ -1,8 +1,9 @@
-void printDataSerial(vent* ventana) {
+void printDataSerial(vent* ventana)
+{
   if (ventana->modoVentana == 10) {
-    Serial.println("--------- AUTOMATICO ---------");
+    Serial.println("---------- AUTOMATICO ----------");
   } else if (ventana->modoVentana == 20) {
-    Serial.println("----------- MANUAL -----------");
+    Serial.println("------------ MANUAL ------------");
   }
   Serial.println(ventana->fechaFormateada);
   Serial.print("Temperatura interior: ");
@@ -22,8 +23,8 @@ void printDataSerial(vent* ventana) {
   Serial.println("ºC");
   Serial.print("Nivel de luz : ");
   Serial.println(ventana->luz);
-  Serial.print("Setpoint luz: ");
+  Serial.print("Luz deseada: ");
   Serial.println(setLuz);
-  Serial.println(persiana.estado == true ? "Persiana abierta y " : "Persiana cerrada y ");
+  Serial.print(persiana.estado == true ? "Persiana abierta y " : "Persiana cerrada y ");
   Serial.println(ventila.estado == true ? "ventila abierta" : "ventila cerrada");
 }

@@ -5,7 +5,7 @@ struct vent {
   float humedadInterior = 0;
   float temperaturaCamaraArriba = 0;
   float temperaturaCamaraAbajo = 0;
-  uint8_t luz = 0;
+  uint16_t luz = 0;
 };
 vent ventana;
 /*********************************** LIBRERIAS ***********************************/
@@ -19,8 +19,12 @@ vent ventana;
 #include "ldr.h"
 #include "imprimirDatos.h"
 
+#define ARRIBA 0
+#define ABAJO 1
+
 /************************************* SETUP *************************************/
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   SD_init();
   RTC_init();
@@ -30,13 +34,14 @@ void setup() {
   servo_init();
 }
 /************************************* LOOP **************************************/
-void loop() {
+void loop()
+{
   // OBTENCION DE DATOS
   ventana.fechaFormateada = getDate();
   ventana.temperaturaInterior = getTempe();
   ventana.humedadInterior = getHumi();
-  ventana.temperaturaCamaraArriba = getUpTemp();
-  ventana.temperaturaCamaraAbajo = getDownTemp();
+  ventana.temperaturaCamaraArriba = getDS18B20(ARRIBA);
+  ventana.temperaturaCamaraAbajo = getDS18B20(ABAJO);
   float temperaturaCamara = (ventana.temperaturaCamaraArriba + ventana.temperaturaCamaraAbajo) / 2;
   ventana.luz = getLDR(pinLDR);
   // REVISION DE MODO DE LA VENTANA
@@ -88,5 +93,5 @@ void loop() {
   printDataSerial(&ventana);
   printDataBT(&ventana, &persiana, &ventila, setLuz);
   logSDCard(&ventana, &persiana, &ventila, setLuz, temperaturaInteriorDeseada);
-  delay(5000);
+  delay(2000);
 }

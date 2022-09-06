@@ -1,12 +1,17 @@
 #include <RTClib.h>
+
 RTC_DS1307 rtc;
-void RTC_init() {
-  Serial.print(!rtc.begin() ? "No se puede encontrar el RTC" : "Se encontro el RTC");
+
+void RTC_init()
+{
+  Serial.println(!rtc.begin() ? "RTC no encontrado" : "RTC encontrado");
   Serial.flush();
-  Serial.print(!rtc.isrunning() ? "El RTC no está corriendo" : "RTC corriendo");
+  Serial.println(!rtc.isrunning() ? "RTC no funciona" : "RTC funcionando");
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
-String getDate() {
+
+String getDate()
+{
   DateTime now = rtc.now();
   char timeStamp[] = "DD/MM/YYYY, hh:mm:ss";
   String dateTime = now.toString(timeStamp);
