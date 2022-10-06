@@ -1,30 +1,24 @@
-struct vent {
-  uint8_t modoVentana = 10;
-  String fechaFormateada = "";
-  float temperaturaInterior = 0;
-  float humedadInterior = 0;
-  float temperaturaCamaraArriba = 0;
-  float temperaturaCamaraAbajo = 0;
-  uint16_t luz = 0;
-};
-vent ventana;
-/*********************************** LIBRERIAS ***********************************/
-#include "constantes.h"
+/* Includes ----------------------------------------------------------------*/
+#include "def.h"
 #include "DS18B20.h"
-#include "servos.h"
-#include "bluetooth.h"
+#include "servo.h"
 #include "dht11.h"
-#include "microsd.h"
-#include "rtc.h"
 #include "ldr.h"
-#include "imprimirDatos.h"
-
-#define ARRIBA 0
-#define ABAJO 1
-
-/************************************* SETUP *************************************/
-void setup()
-{
+#include "rtc.h"
+#include "bluetooth.h"
+#include "microsd.h"
+#include "print_data.h"
+/* Structures ----------------------------------------------------------------*/
+vent ventana = {
+  .windowMode = 10,
+  .dateFormatted = "",
+  .tempIndoor = 0,
+  .humIndoor = 0,
+  .avgTemp = 0,
+  .ldr = 0
+};
+/* Setup -------------------------------------------------------------------*/
+void setup() {
   Serial.begin(115200);
   SD_init();
   RTC_init();
@@ -33,65 +27,54 @@ void setup()
   DHT_init();
   servo_init();
 }
-/************************************* LOOP **************************************/
-void loop()
-{
-  // OBTENCION DE DATOS
-  ventana.fechaFormateada = getDate();
-  ventana.temperaturaInterior = getTempe();
-  ventana.humedadInterior = getHumi();
-  ventana.temperaturaCamaraArriba = getDS18B20(ARRIBA);
-  ventana.temperaturaCamaraAbajo = getDS18B20(ABAJO);
-  float temperaturaCamara = (ventana.temperaturaCamaraArriba + ventana.temperaturaCamaraAbajo) / 2;
-  ventana.luz = getLDR(pinLDR);
-  // REVISION DE MODO DE LA VENTANA
-  // MODO AUTOMATICO
-  if (ventana.modoVentana == 10) {
-    if (ventana.luz >= setLuz) {
-      estadoPersiana(true);
+/* Loop -------------------------------------------------------------------*/
+void loop() {
+  /* Obtención de datos ---------------------------------------------------*/
+  ventana.dateFormatted = getDate();
+  ventana.tempIndoor =    getTempe();
+  ventana.humIndoor =     getHumi();
+  ventana.avgTemp =       getAvgTemp();
+  ventana.ldr =           getLDR();
+  /* Modo automático por defecto ------------------------------------------*/
+  if (ventana.windowMode == 10) {
+    if (ventana.ldr >= luzDeseada) {
+      persianaState(true);
     }
-    else if (ventana.luz < setLuz) {
-      estadoPersiana(false);
+    else if (ventana.ldr < luzDeseada) {
+      persianaState(false);
     }
-    if (temperaturaCamara > temperaturaInteriorDeseada || ventana.temperaturaInterior < temperaturaInteriorDeseada || temperaturaCamara > ventana.temperaturaInterior) {
-      estadoVentila(true);
+    if (ventana.avgTemp > temperaturaDeseada || ventana.tempIndoor < temperaturaDeseada || ventana.avgTemp > ventana.tempIndoor) {
+      ventilaState(true);
     } else {
-      estadoVentila(false);
+      ventilaState(false);
     }
   }
-  // MODO MANUAL
-
-  else if (ventana.modoVentana == 20) {
-  }
-  // VERIFICAR BLUETOOTH DISPONIBLE Y LEER COMANDO
   String comando = "";
   while (SerialBT.available()) {
     comando = SerialBT.readString();
     comando.trim();
   }
-  // REALIZAR ACCION DE ACUERDO AL COMANDO LEIDO
-  // MODO AUTOMATICO
+  /* Modo automático app  --------------------------------------------------*/
   if (comando == "4") {
-    ventana.modoVentana = 10;
+    ventana.windowMode = 10;
   }
-  // MODO MANUAL
-  if (comando == "5") {
-    ventana.modoVentana = 20;
+  else if (comando == "5") {
+    ventana.windowMode = 20;
   }
-  if (comando == "1" && ventana.modoVentana == 20) {
-    estadoPersiana(true);
+  else if (comando == "1" && ventana.windowMode == 20) {
+    persianaState(true);
   }
-  else if (comando == "0" && ventana.modoVentana == 20) {
-    estadoPersiana(false);
+  else if (comando == "0" && ventana.windowMode == 20) {
+    persianaState(false);
   }
-  else if (comando == "2" && ventana.modoVentana == 20) {
-    estadoVentila(true);
+  else if (comando == "2" && ventana.windowMode == 20) {
+    ventilaState(true);
   }
-  else if (comando == "3" && ventana.modoVentana == 20) {
-    estadoVentila(false);
+  else if (comando == "3" && ventana.windowMode == 20) {
+    ventilaState(false);
   }
-  printDataSerial(&ventana);
-  printDataBT(&ventana, &persiana, &ventila, setLuz);
-  logSDCard(&ventana, &persiana, &ventila, setLuz, temperaturaInteriorDeseada);
+  printDataSerial(&dht11, &persiana, &ventila, &ventana, &camaraSuperior, &camaraInferior, &luzDeseada, &temperaturaDeseada);
+  printDataBT(&dht11, &persiana, &ventila, &ventana, &camaraSuperior, &camaraInferior, &luzDeseada, &temperaturaDeseada);
+  logSDCard(&dht11, &persiana, &ventila, &ventana, &camaraSuperior, &camaraInferior, &luzDeseada, &temperaturaDeseada);
   delay(2000);
 }

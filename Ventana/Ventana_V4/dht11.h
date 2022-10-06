@@ -1,30 +1,24 @@
-#define DHTtype DHT11
-struct dhtSensor {
-  const uint8_t pin;
-  float temp;
-  float hum;
-};
-dhtSensor dhtSensor = {15, 0, 0};
-
+/* Includes ------------------------------------------------------------------*/
 #include <DHT.h>
-
-DHT dht(dhtSensor.pin, DHTtype);
-
-void DHT_init()
-{
-  dht.begin();
+/* Structures ----------------------------------------------------------------*/
+dht dht11 = {
+  .pin = 15,
+  .temp = 0,
+  .hum = 0
+};
+/* Instances -----------------------------------------------------------------*/
+DHT dhtSensor(dht11.pin, DHT11);
+/* Functions -----------------------------------------------------------------*/
+void DHT_init() {
+  dhtSensor.begin();
 }
-
-float getTempe()
-{
-  dhtSensor.temp = dht.readTemperature();
-  dhtSensor.temp = isnan(dhtSensor.temp) ? 0 : dhtSensor.temp;
-  return dhtSensor.temp;
+float getTempe() {
+  dht11.temp = dhtSensor.readTemperature();
+  dht11.temp = isnan(dht11.temp) ? 0 : dht11.temp;
+  return dht11.temp;
 }
-
-float getHumi()
-{
-  dhtSensor.hum = dht.readHumidity();
-  dhtSensor.hum = isnan(dhtSensor.hum) ? 0 : dhtSensor.hum;
-  return dhtSensor.hum;
+float getHumi() {
+  dht11.hum = dhtSensor.readHumidity();
+  dht11.hum = isnan(dht11.hum) ? 0 : dht11.hum;
+  return dht11.hum;
 }

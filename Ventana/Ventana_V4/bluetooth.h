@@ -1,15 +1,22 @@
+/* Includes ----------------------------------------------------------------*/
 #include <BluetoothSerial.h>
-
+/* Instances ----------------------------------------------------------------*/
 BluetoothSerial SerialBT;
-
-void BT_init()
-{
-  SerialBT.begin("ESP32-2");
+/* Functions -----------------------------------------------------------------*/
+void BT_init() {
+  SerialBT.begin("ESP32-4");
   Serial.println("El dispositivo se ha iniciado, ahora puedes emparejarlo");
 }
-
-void printDataBT(vent* ventana, servo* persiana, servo* ventila, uint8_t setLuz)
-{
-  String datosBT = String(ventana->temperaturaInterior) + "_" + String(ventana->humedadInterior) + "_" + String(persiana->estado) + "_" + String(ventila->estado) + "_" + String(ventana->modoVentana) + "_" + String(ventana->luz) + "_" + String(ventana->temperaturaCamaraArriba) + "_" + String(ventana->temperaturaCamaraAbajo) + "_" + String(setLuz) + "\r\n";
+void printDataBT(dht* dht11, servo* persiana, servo* ventila, vent* ventana, ds18b20* camaraSuperior, ds18b20* camaraInferior, uint16_t *luzDeseada, uint8_t *temperaturaDeseada) {
+  String datosBT =  String(dht11->temp) + "_" +
+                    String(dht11->hum) + "_" +
+                    String(persiana->state) + "_" +
+                    String(ventila->state) + "_" +
+                    String(ventana->windowMode) + "_" +
+                    String(ventana->ldr) + "_" +
+                    String(camaraSuperior->temp) + "_" +
+                    String(camaraInferior->temp) + "_" +
+                    String(*luzDeseada) + "_" +
+                    String(*temperaturaDeseada) + "\r\n";
   SerialBT.print(datosBT);
 }
